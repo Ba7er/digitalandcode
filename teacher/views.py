@@ -1,10 +1,9 @@
 from django.core.exceptions import ValidationError
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
 
-from django.shortcuts import render
 from django.urls import reverse
 
 from .forms import TeacherForm, UploadFileForm, FilterForm
@@ -12,15 +11,11 @@ from .models import Teacher
 from subject.models import Subject
 from .utils import handle_uploaded_file
 
-from django.http import HttpResponse
-from django.contrib import messages
-
 
 # Create your views here.
 
 
 def index(request):
-    res = request.GET.get('id')
     teachers_list = Teacher.objects.filter(last_name__startswith='')
     create_teacher_form = TeacherForm()
     uploadFileForm = UploadFileForm()
@@ -69,8 +64,6 @@ def create_bulk(request):
                         new_teacher.subjects.add(subject)
                 except ValidationError as e:
                     print('error is', e)
-
-    print(teachers_list)
 
     return HttpResponseRedirect(reverse('teacher:index'))
 
